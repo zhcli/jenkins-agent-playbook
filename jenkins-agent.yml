@@ -1,0 +1,35 @@
+---
+- name: Activate Jenkins Inbound Agent
+  hosts: localhost
+  connection: local
+  become: true
+  tasks:
+    - name: Install container tool
+      ansible.builtin.dnf:
+        name: container-tools
+        state: present
+        update_cache: true
+
+    - name: Install Java jdk
+      ansible.builtin.dnf:
+        name: java-11-openjdk
+        state: present
+        update_cache: true
+
+    - name: Set up jenkins user and home
+      ansible.builtin.user:
+        name: jenkins
+        expires: -1
+
+    - name: Download inbound agent JAR file
+      ansible.builtin.get_url:
+        url: https://{{ controller_fqdn }}/jnlpJars/agent.jar
+        dest: /home/jenkins/
+        mode: '0777'
+
+    - name: Start up Jenkins agent process
+      ansible.builtin.command: >
+        runuser -l jenkins -c 'nohup java -jar /home/jenkins/agent.jar -url https://{{ controller_fqdn }}/jnlpJars/agent.jar
+         -secret {{ agent_secret }} -name "azure-vm" -webSocket -workDir "/home/jenkins" &'
+      register: output
+      changed_when: output.rc != 0
