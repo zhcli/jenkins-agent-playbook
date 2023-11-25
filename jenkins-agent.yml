@@ -6,7 +6,7 @@
   tasks:
     - name: Install container tool
       ansible.builtin.dnf:
-        name: podman
+        name: "{{ item }}"
         state: present
         update_cache: true
       with_items:
