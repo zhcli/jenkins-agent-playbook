@@ -12,7 +12,7 @@
       with_items:
         - podman
         - buildah
-        - java-11-openjdk
+        - java
 
     - name: Set up jenkins user and home
       ansible.builtin.user:
