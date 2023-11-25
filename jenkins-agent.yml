@@ -6,15 +6,13 @@
   tasks:
     - name: Install container tool
       ansible.builtin.dnf:
-        name: container-tools
+        name: podman
         state: present
         update_cache: true
-
-    - name: Install Java jdk
-      ansible.builtin.dnf:
-        name: java-11-openjdk
-        state: present
-        update_cache: true
+      with_items:
+        - podman
+        - buildah
+        - java-11-openjdk
 
     - name: Set up jenkins user and home
       ansible.builtin.user:
