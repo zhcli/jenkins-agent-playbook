@@ -27,7 +27,7 @@
 
     - name: Start up Jenkins agent process
       ansible.builtin.command: >
-        runuser -l jenkins -c 'nohup java -jar /home/jenkins/agent.jar -url https://{{ controller_fqdn }}/jnlpJars/agent.jar
+        runuser -l jenkins -c 'nohup java -jar /home/jenkins/agent.jar -url https://{{ controller_fqdn }}/
          -secret {{ agent_secret }} -name "azure-vm" -webSocket -workDir "/home/jenkins" &'
       register: output
       changed_when: output.rc != 0
